@@ -1,0 +1,51 @@
+# The name of this workflow, shown in the "Actions" tab on GitHub.
+name: CI
+
+# "on" lists the events that start (trigger) this workflow.
+on:
+  # Run whenever someone pushes commits...
+  push:
+    # ...but only to these branches.
+    branches:
+      # The main branch.
+      - main
+  # Also add a "Run workflow" button in the Actions tab so you can start it by hand.
+  workflow_dispatch:
+
+# A workflow is made of one or more jobs.
+jobs:
+  # The ID of our only job. It shows up as "build" in the Actions tab.
+  build:
+    # The kind of virtual machine (called a "runner") that GitHub gives us for this job.
+    runs-on: ubuntu-latest
+
+    # Steps run one after another, top to bottom, on the same runner.
+    steps:
+      # A label for this step, shown in the logs.
+      - name: Check out the code
+        # Use a ready-made action that copies your repository's files onto the runner.
+        uses: actions/checkout@v4
+
+      # A label for this step, shown in the logs.
+      - name: Set up Python
+        # Use a ready-made action that installs Python on the runner.
+        uses: actions/setup-python@v5
+        # "with" passes settings (inputs) to the action.
+        with:
+          # The Python version to install. Quoted so YAML treats it as text, not a number.
+          python-version: "3.12"
+
+      # A label for this step, shown in the logs.
+      - name: Install dependencies
+        # "run" executes shell commands. Here we install everything listed in requirements.txt.
+        run: pip install -r requirements.txt
+
+      # A label for this step, shown in the logs.
+      - name: Run tests
+        # Run pytest. If any test fails, this step fails and the workflow turns red.
+        run: pytest
+
+      # A label for this step, shown in the logs.
+      - name: Show commit info
+        # ${{ github.sha }} is the commit ID; ${{ github.actor }} is the user who triggered the run.
+        run: echo "Commit ${{ github.sha }} was pushed by ${{ github.actor }}"
