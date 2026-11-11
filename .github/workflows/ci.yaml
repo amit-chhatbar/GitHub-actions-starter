@@ -33,7 +33,7 @@ jobs:
         # "with" passes settings (inputs) to the action.
         with:
           # The Python version to install. Quoted so YAML treats it as text, not a number.
-          python-version: "3.12"
+          python-version: "3.xyz"
 
       # A label for this step, shown in the logs.
       - name: Install dependencies
